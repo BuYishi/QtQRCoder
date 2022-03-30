@@ -16,7 +16,7 @@ Widget::~Widget() { delete ui; }
 
 void Widget::on_chooseButton_clicked() {
   QString fileName = QFileDialog::getOpenFileName(this, "选择");
-  qDebug() << fileName;
+  qDebug() << "fileName: " << fileName;
   if (!fileName.isEmpty()) {
     QImage img;
     qDebug() << img.load(fileName);

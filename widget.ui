@@ -126,6 +126,9 @@
            </item>
            <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
             <widget class="PixmapLabel" name="decodedImgLabel">
+             <property name="acceptDrops">
+              <bool>true</bool>
+             </property>
              <property name="text">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; color:#ff00ff;&quot;&gt;选择文件或将文件拖拽至此&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>

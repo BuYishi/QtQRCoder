@@ -125,7 +125,7 @@
             </widget>
            </item>
            <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-            <widget class="QLabel" name="decodedImgLabel">
+            <widget class="PixmapLabel" name="decodedImgLabel">
              <property name="text">
               <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:14pt; color:#ff00ff;&quot;&gt;选择文件或将文件拖拽至此&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
              </property>
@@ -172,6 +172,13 @@
   </layout>
  </widget>
  <layoutdefault spacing="6" margin="11"/>
+ <customwidgets>
+  <customwidget>
+   <class>PixmapLabel</class>
+   <extends>QLabel</extends>
+   <header>PixmapLabel.h</header>
+  </customwidget>
+ </customwidgets>
  <resources>
   <include location="res.qrc"/>
  </resources>

@@ -107,7 +107,7 @@
        <item>
         <layout class="QVBoxLayout" name="verticalLayout_2">
          <item>
-          <layout class="QVBoxLayout" name="verticalLayout">
+          <layout class="QVBoxLayout" name="verticalLayout" stretch="0,1,0">
            <item>
             <widget class="QTextEdit" name="resultTextEdit">
              <property name="enabled">
@@ -124,19 +124,6 @@
              </property>
             </widget>
            </item>
-           <item>
-            <spacer name="verticalSpacer">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
-           </item>
            <item alignment="Qt::AlignHCenter|Qt::AlignVCenter">
             <widget class="QLabel" name="decodedImgLabel">
              <property name="text">
@@ -149,19 +136,6 @@
               <bool>false</bool>
              </property>
             </widget>
-           </item>
-           <item>
-            <spacer name="verticalSpacer_2">
-             <property name="orientation">
-              <enum>Qt::Vertical</enum>
-             </property>
-             <property name="sizeHint" stdset="0">
-              <size>
-               <width>20</width>
-               <height>40</height>
-              </size>
-             </property>
-            </spacer>
            </item>
            <item>
             <layout class="QHBoxLayout" name="horizontalLayout">

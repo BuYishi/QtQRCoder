@@ -15,18 +15,12 @@ Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {
 Widget::~Widget() { delete ui; }
 
 void Widget::on_chooseButton_clicked() {
-  QString fileName = QFileDialog::getOpenFileName(this, "选择");
+  const QString &fileName = QFileDialog::getOpenFileName(this, "选择");
   qDebug() << "fileName: " << fileName;
   if (!fileName.isEmpty()) {
-    QImage img;
-    qDebug() << img.load(fileName);
-    ui->decodedImgLabel->clear();
+    //    ui->decodedImgLabel->clear();
     ui->decodedImgLabel->setPixmap(QPixmap(fileName));
-    QZXing decoder;
-    QString result = decoder.decodeImage(img);
-    qDebug() << result;
-    ui->resultTextEdit->setText(result);
-    qDebug() << QZXing().decodeImageFromFile(fileName);
+    ui->resultTextEdit->setText(QZXing().decodeImageFromFile(fileName));
   }
 }
 

@@ -19,7 +19,7 @@
      <property name="currentIndex">
       <number>1</number>
      </property>
-     <widget class="QWidget" name="tab_2">
+     <widget class="QWidget" name="tabEncode">
       <attribute name="title">
        <string>Encode</string>
       </attribute>
@@ -99,7 +99,7 @@
        </item>
       </layout>
      </widget>
-     <widget class="QWidget" name="tab">
+     <widget class="QWidget" name="tabDecode">
       <attribute name="title">
        <string>Decode</string>
       </attribute>

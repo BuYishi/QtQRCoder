@@ -7,25 +7,24 @@ namespace Ui {
 class Widget;
 }
 
-class Widget : public QWidget
-{
-    Q_OBJECT
+class Widget : public QWidget {
+  Q_OBJECT
 
-public:
-    explicit Widget(QWidget *parent = 0);
-    ~Widget();
+ public:
+  explicit Widget(QWidget *parent = 0);
+  ~Widget();
 
-private slots:
-    void on_chooseButton_clicked();
+ private slots:
+  void on_chooseButton_clicked();
 
-    void on_saveButton_clicked();
+  void on_saveButton_clicked();
 
-    void on_encodeButton_clicked();
+  void on_encodeButton_clicked();
 
-    void on_Widget_destroyed();
+  void on_Widget_destroyed();
 
-private:
-    Ui::Widget *ui;
+ private:
+  Ui::Widget *ui;
 };
 
-#endif // WIDGET_H
+#endif  // WIDGET_H

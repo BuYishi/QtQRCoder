@@ -13,29 +13,9 @@ TEMPLATE = app
 
 
 SOURCES += main.cpp\
-        widget.cpp \
-    QREncode/bitstream.c \
-    QREncode/mask.c \
-    QREncode/mmask.c \
-    QREncode/mqrspec.c \
-    QREncode/qrencode.c \
-    QREncode/qrinput.c \
-    QREncode/qrspec.c \
-    QREncode/rscode.c \
-    QREncode/split.c
+        widget.cpp
 
-HEADERS  += widget.h \
-    QREncode/bitstream.h \
-    QREncode/config.h \
-    QREncode/mask.h \
-    QREncode/mmask.h \
-    QREncode/mqrspec.h \
-    QREncode/qrencode.h \
-    QREncode/qrencode_inner.h \
-    QREncode/qrinput.h \
-    QREncode/qrspec.h \
-    QREncode/rscode.h \
-    QREncode/split.h
+HEADERS  += widget.h
 
 FORMS    += widget.ui
 

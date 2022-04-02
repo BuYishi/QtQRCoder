@@ -5,7 +5,6 @@
 #include <QPainter>
 #include <QPixmap>
 #include <QtDebug>
-#include "QREncode/qrencode.h"
 #include "ui_widget.h"
 
 Widget::Widget(QWidget *parent) : QWidget(parent), ui(new Ui::Widget) {

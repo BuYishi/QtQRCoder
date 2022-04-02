@@ -34,33 +34,11 @@ void Widget::on_saveButton_clicked() {
 }
 
 void Widget::on_encodeButton_clicked() {
-  QRcode *qrcode = QRcode_encodeString(
-      ui->contentTextEdit->document()->toPlainText().toStdString().c_str(), 7,
-      QR_ECLEVEL_H, QR_MODE_8, 1);
-  if (qrcode != nullptr) {
-    unsigned char *data = qrcode->data;
-    QPixmap qrcodePixmap(300, 300);
-    QPainter painter(&qrcodePixmap);
-    painter.setPen(Qt::NoPen);
-    painter.setBrush(QColor("white"));
-    painter.drawRect(0, 0, 300, 300);
-    double scale = (300 - 2.0 * 10) / qrcode->width;
-    painter.setBrush(QColor("blue"));
-    for (int y = 0; y < qrcode->width; y++) {
-      for (int x = 0; x < qrcode->width; x++) {
-        if (*data & 1) {
-          QRectF r(10 + x * scale, 10 + y * scale, scale, scale);
-          painter.drawRects(&r, 1);
-        }
-        data++;
-      }
-    }
-    // qDebug()<<qrcodePixmap.save("tmp.png");
-    ui->encodedImgLabel->setPixmap(qrcodePixmap);
-    data = NULL;
-    QRcode_free(qrcode);
-  }
-  qrcode = NULL;
+  const QImage &barcode =
+      QZXing::encodeData(ui->contentTextEdit->document()->toPlainText());
+  ui->encodedImgLabel->setPixmap(QPixmap::fromImage(barcode));
 }
 
-void Widget::on_Widget_destroyed() { qDebug() << "The window was destroyed."; }
+void Widget::on_Widget_destroyed() {
+  qDebug() << "on_Widget_destroyed() called";
+}

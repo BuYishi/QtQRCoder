@@ -18,7 +18,6 @@ void Widget::on_chooseButton_clicked() {
   const QString &fileName = QFileDialog::getOpenFileName(this, "选择");
   qDebug() << "fileName: " << fileName;
   if (!fileName.isEmpty()) {
-    //    ui->decodedImgLabel->clear();
     ui->decodedImgLabel->setPixmap(QPixmap(fileName));
     ui->resultTextEdit->setText(QZXing().decodeImageFromFile(fileName));
   }

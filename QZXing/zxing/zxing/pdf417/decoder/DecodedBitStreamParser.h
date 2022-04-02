@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __DECODED_BIT_STREAM_PARSER_PD_H__
-#define __DECODED_BIT_STREAM_PARSER_PD_H__
+#ifndef ZXING_DECODED_BIT_STREAM_PARSER_PD_H
+#define ZXING_DECODED_BIT_STREAM_PARSER_PD_H
 
 /*
  * Copyright 2010 ZXing authors All rights reserved.
@@ -19,7 +19,6 @@
  */
 
 #include <bigint/BigInteger.hh>
-#include <zxing/common/Array.h>
 #include <zxing/common/Str.h>
 #include <zxing/common/DecoderResult.h>
 
@@ -61,24 +60,24 @@ class DecodedBitStreamParser {
   static const char PUNCT_CHARS[];
   static const char MIXED_CHARS[];
  
-  static ArrayRef<BigInteger> EXP900;
-  static ArrayRef<BigInteger> initEXP900();
+  static QSharedPointer<std::vector<BigInteger>> EXP900;
+  static QSharedPointer<std::vector<BigInteger>> initEXP900();
   
-  static int textCompaction(ArrayRef<int> codewords, int codeIndex, Ref<String> result);
-  static void decodeTextCompaction(ArrayRef<int> textCompactionData,
-                                   ArrayRef<int> byteCompactionData,
+  static int textCompaction(QSharedPointer<std::vector<int>> codewords, int codeIndex, QSharedPointer<String> result);
+  static void decodeTextCompaction(QSharedPointer<std::vector<int>> textCompactionData,
+                                   QSharedPointer<std::vector<int>> byteCompactionData,
                                    int length,
-                                   Ref<String> result);
-  static int byteCompaction(int mode, ArrayRef<int> codewords, int codeIndex, Ref<String> result);
-  static int numericCompaction(ArrayRef<int> codewords, int codeIndex, Ref<String> result);
-  static Ref<String> decodeBase900toBase10(ArrayRef<int> codewords, int count);
+                                   QSharedPointer<String> result);
+  static int byteCompaction(int mode, QSharedPointer<std::vector<int>> codewords, int codeIndex, QSharedPointer<String> result);
+  static int numericCompaction(QSharedPointer<std::vector<int>> codewords, int codeIndex, QSharedPointer<String> result);
+  static QSharedPointer<String> decodeBase900toBase10(QSharedPointer<std::vector<int>> codewords, int count);
 
  public:
   DecodedBitStreamParser();
-  static Ref<DecoderResult> decode(ArrayRef<int> codewords);
+  static QSharedPointer<DecoderResult> decode(QSharedPointer<std::vector<int>> codewords);
 };
 
 } /* namespace pdf417 */
 } /* namespace zxing */
 
-#endif // __DECODED_BIT_STREAM_PARSER_PD_H__
+#endif // ZXING_DECODED_BIT_STREAM_PARSER_PD_H

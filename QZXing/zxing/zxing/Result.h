@@ -1,5 +1,5 @@
-#ifndef __RESULT_H__
-#define __RESULT_H__
+#ifndef ZXING_RESULT_H
+#define ZXING_RESULT_H
 
 /*
  *  Result.h
@@ -21,35 +21,41 @@
  */
 
 #include <string>
-#include <zxing/common/Array.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/Str.h>
+#include <zxing/common/Types.h>
 #include <zxing/ResultPoint.h>
+#include <zxing/ResultMetadata.h>
 #include <zxing/BarcodeFormat.h>
 
 namespace zxing {
 
-class Result : public Counted {
+class Result  {
 private:
-  Ref<String> text_;
-  ArrayRef<char> rawBytes_;
-  ArrayRef< Ref<ResultPoint> > resultPoints_;
+  QSharedPointer<String> text_;
+  QSharedPointer<std::vector<zxing::byte>> rawBytes_;
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints_;
   BarcodeFormat format_;
+  std::string charSet_;
+  ResultMetadata metadata_;
 
 public:
-  Result(Ref<String> text,
-         ArrayRef<char> rawBytes,
-         ArrayRef< Ref<ResultPoint> > resultPoints,
-         BarcodeFormat format);
+  Result(QSharedPointer<String> text,
+         QSharedPointer<std::vector<zxing::byte>> rawBytes,
+         QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > resultPoints,
+         BarcodeFormat format, const std::string &charSet = "",
+         ResultMetadata metadata = ResultMetadata());
   ~Result();
-  Ref<String> getText();
-  ArrayRef<char> getRawBytes();
-  ArrayRef< Ref<ResultPoint> > const& getResultPoints() const;
-  ArrayRef< Ref<ResultPoint> >& getResultPoints();
+  QSharedPointer<String> getText();
+  QSharedPointer<std::vector<zxing::byte>> getRawBytes();
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> > const& getResultPoints() const;
+  QSharedPointer<std::vector<QSharedPointer<ResultPoint>> >& getResultPoints();
   BarcodeFormat getBarcodeFormat() const;
+  std::string getCharSet() const;
+  ResultMetadata& getMetadata();
 
   friend std::ostream& operator<<(std::ostream &out, Result& result);
 };
 
 }
-#endif // __RESULT_H__
+#endif // ZXING_RESULT_H

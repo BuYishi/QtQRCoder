@@ -19,8 +19,8 @@
  * limitations under the License.
  */
 
-#ifndef __ZXING_AZTEC_DECODER_DECODER_H__
-#define __ZXING_AZTEC_DECODER_DECODER_H__
+#ifndef ZXING_AZTEC_DECODER_DECODER_H
+#define ZXING_AZTEC_DECODER_DECODER_H
 
 #include <zxing/common/BitMatrix.h>
 #include <zxing/common/Str.h>
@@ -32,7 +32,7 @@ class DecoderResult;
         
 namespace aztec {
 
-class Decoder : public Counted {
+class Decoder  {
  private:
   enum Table {
     UPPER,
@@ -48,22 +48,22 @@ class Decoder : public Counted {
             
   int numCodewords_;
   int codewordSize_;
-  Ref<AztecDetectorResult> ddata_;
+  QSharedPointer<AztecDetectorResult> ddata_;
   int invertedBitCount_;
             
-  Ref<String> getEncodedData(Ref<BitArray> correctedBits);
-  Ref<BitArray> correctBits(Ref<BitArray> rawbits);
-  Ref<BitArray> extractBits(Ref<BitMatrix> matrix);
-  static Ref<BitMatrix> removeDashedLines(Ref<BitMatrix> matrix);
-  static int readCode(Ref<BitArray> rawbits, int startIndex, int length);
+  QSharedPointer<String> getEncodedData(QSharedPointer<BitArray> correctedBits);
+  QSharedPointer<BitArray> correctBits(QSharedPointer<BitArray> rawbits);
+  QSharedPointer<BitArray> extractBits(QSharedPointer<BitMatrix> matrix);
+  static QSharedPointer<BitMatrix> removeDashedLines(QSharedPointer<BitMatrix> matrix);
+  static int readCode(QSharedPointer<BitArray> rawbits, int startIndex, int length);
             
             
  public:
   Decoder();
-  Ref<DecoderResult> decode(Ref<AztecDetectorResult> detectorResult);
+  QSharedPointer<DecoderResult> decode(QSharedPointer<AztecDetectorResult> detectorResult);
 };
         
 }
 }
 
-#endif
+#endif // ZXING_AZTEC_DECODER_DECODER_H

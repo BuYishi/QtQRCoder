@@ -1,5 +1,5 @@
-#ifndef __VERSION_H__
-#define __VERSION_H__
+#ifndef ZXING_VERSION_H
+#define ZXING_VERSION_H
 
 /*
  *  Version.h
@@ -23,7 +23,7 @@
 
 #include <zxing/ReaderException.h>
 #include <zxing/common/BitMatrix.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <vector>
 
 namespace zxing {
@@ -51,7 +51,7 @@ public:
   ~ECBlocks();
 };
 
-class Version : public Counted {
+class Version  {
 private:
   int versionNumber_;
   int symbolSizeRows_;
@@ -64,18 +64,18 @@ private:
 		  int dataRegionSizeColumns, ECBlocks *ecBlocks);
 
 public:
-  static std::vector<Ref<Version> > VERSIONS;
+  static std::vector<QSharedPointer<Version>> VERSIONS;
   
   ~Version();
-  int getVersionNumber();
-  int getSymbolSizeRows();
-  int getSymbolSizeColumns();  
-  int getDataRegionSizeRows();  
-  int getDataRegionSizeColumns();
-  int getTotalCodewords();
-  ECBlocks* getECBlocks();
+  int getVersionNumber() const;
+  int getSymbolSizeRows() const;
+  int getSymbolSizeColumns() const;
+  int getDataRegionSizeRows() const;
+  int getDataRegionSizeColumns() const;
+  int getTotalCodewords() const;
+  ECBlocks* getECBlocks() const;
   static int  buildVersions();  
-  Ref<Version> getVersionForDimensions(int numRows, int numColumns);
+  QSharedPointer<Version>getVersionForDimensions(int numRows, int numColumns);
   
 private:
   Version(const Version&);
@@ -84,4 +84,4 @@ private:
 }
 }
 
-#endif // __VERSION_H__
+#endif // ZXING_VERSION_H

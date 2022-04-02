@@ -1,5 +1,5 @@
-#ifndef __QRCODE_MULTI_READER_H__
-#define __QRCODE_MULTI_READER_H__
+#ifndef ZXING_QRCODE_MULTI_READER_H
+#define ZXING_QRCODE_MULTI_READER_H
 
 /*
  *  Copyright 2011 ZXing authors All rights reserved.
@@ -27,10 +27,10 @@ class QRCodeMultiReader: public zxing::qrcode::QRCodeReader, public MultipleBarc
   public:
     QRCodeMultiReader();
     virtual ~QRCodeMultiReader();
-    virtual std::vector<Ref<Result> > decodeMultiple(Ref<BinaryBitmap> image, DecodeHints hints);
+    virtual std::vector<QSharedPointer<Result> > decodeMultiple(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 };
 
 }
 }
 
-#endif // __QRCODE_MULTI_READER_H__
+#endif // ZXING_QRCODE_MULTI_READER_H

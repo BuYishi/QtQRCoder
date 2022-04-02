@@ -1,5 +1,5 @@
-#ifndef __BIT_SOURCE_H__
-#define __BIT_SOURCE_H__
+#ifndef ZXING_BIT_SOURCE_H
+#define ZXING_BIT_SOURCE_H
 
 /*
  *  BitSource.h
@@ -20,7 +20,7 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Array.h>
+#include <zxing/common/Types.h>
 
 namespace zxing {
 /**
@@ -32,10 +32,9 @@ namespace zxing {
  * @author srowen@google.com (Sean Owen)
  * @author christian.brunschen@gmail.com (Christian Brunschen)
  */
-class BitSource : public Counted {
-  typedef char byte;
+class BitSource  {
 private:
-  ArrayRef<byte> bytes_;
+  QSharedPointer<std::vector<zxing::byte>> bytes_;
   int byteOffset_;
   int bitOffset_;
 public:
@@ -43,7 +42,7 @@ public:
    * @param bytes bytes from which this will read bits. Bits will be read from the first byte first.
    * Bits are read within a byte from most-significant to least-significant bit.
    */
-  BitSource(ArrayRef<byte> &bytes) :
+  BitSource(QSharedPointer<std::vector<zxing::byte>> &bytes) :
       bytes_(bytes), byteOffset_(0), bitOffset_(0) {
   }
 
@@ -71,4 +70,4 @@ public:
 
 }
 
-#endif // __BIT_SOURCE_H__
+#endif // ZXING_BIT_SOURCE_H

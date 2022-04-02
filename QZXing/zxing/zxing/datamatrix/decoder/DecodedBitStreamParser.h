@@ -1,5 +1,5 @@
-#ifndef __DECODED_BIT_STREAM_PARSER_DM_H__
-#define __DECODED_BIT_STREAM_PARSER_DM_H__
+#ifndef ZXING_DECODED_BIT_STREAM_PARSER_DM_H
+#define ZXING_DECODED_BIT_STREAM_PARSER_DM_H
 
 /*
  *  DecodedBitStreamParser.h
@@ -23,9 +23,8 @@
 
 #include <string>
 #include <sstream>
-#include <zxing/common/Array.h>
 #include <zxing/common/BitSource.h>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/DecoderResult.h>
 
 
@@ -59,46 +58,47 @@ private:
   /**
    * See ISO 16022:2006, 5.2.3 and Annex C, Table C.2
    */
-  int decodeAsciiSegment(Ref<BitSource> bits, std::ostringstream &result, std::ostringstream &resultTrailer);
+  int decodeAsciiSegment(QSharedPointer<BitSource> bits, std::ostringstream &result, std::ostringstream &resultTrailer);
   /**
    * See ISO 16022:2006, 5.2.5 and Annex C, Table C.1
    */
-  void decodeC40Segment(Ref<BitSource> bits, std::ostringstream &result);
+  void decodeC40Segment(QSharedPointer<BitSource> bits, std::ostringstream &result);
   /**
    * See ISO 16022:2006, 5.2.6 and Annex C, Table C.2
    */
-  void decodeTextSegment(Ref<BitSource> bits, std::ostringstream &result);
+  void decodeTextSegment(QSharedPointer<BitSource> bits, std::ostringstream &result);
   /**
    * See ISO 16022:2006, 5.2.7
    */
-  void decodeAnsiX12Segment(Ref<BitSource> bits, std::ostringstream &result);
+  void decodeAnsiX12Segment(QSharedPointer<BitSource> bits, std::ostringstream &result);
   /**
    * See ISO 16022:2006, 5.2.8 and Annex C Table C.3
    */
-  void decodeEdifactSegment(Ref<BitSource> bits, std::ostringstream &result);
+  void decodeEdifactSegment(QSharedPointer<BitSource> bits, std::ostringstream &result);
   /**
    * See ISO 16022:2006, 5.2.9 and Annex B, B.2
    */
-  void decodeBase256Segment(Ref<BitSource> bits, std::ostringstream &result, std::vector<char> byteSegments);
+  void decodeBase256Segment(QSharedPointer<BitSource> bits, std::ostringstream &result, std::vector<zxing::byte> byteSegments);
 
   void parseTwoBytes(int firstByte, int secondByte, int* result);
   /**
    * See ISO 16022:2006, Annex B, B.2
    */
-  char unrandomize255State(int randomizedBase256Codeword,
+  zxing::byte unrandomize255State(int randomizedBase256Codeword,
                            int base256CodewordPosition) {
     int pseudoRandomNumber = ((149 * base256CodewordPosition) % 255) + 1;
     int tempVariable = randomizedBase256Codeword - pseudoRandomNumber;
-    return (char) (tempVariable >= 0 ? tempVariable : (tempVariable + 256));
-  };
+    return static_cast<zxing::byte>(tempVariable >= 0 ? tempVariable : (tempVariable + 256));
+  }
+
   void append(std::ostream &ost, const char *bufIn, size_t nIn, const char *src);
 
 public:
-  DecodedBitStreamParser() { };
-  Ref<DecoderResult> decode(ArrayRef<char> bytes);
+  DecodedBitStreamParser() { }
+  QSharedPointer<DecoderResult> decode(QSharedPointer<std::vector<zxing::byte>> bytes);
 };
 
 }
 }
 
-#endif // __DECODED_BIT_STREAM_PARSER_DM_H__
+#endif // ZXING_DECODED_BIT_STREAM_PARSER_DM_H

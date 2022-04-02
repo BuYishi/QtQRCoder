@@ -29,7 +29,12 @@ namespace qrcode {
 ErrorCorrectionLevel::ErrorCorrectionLevel(int inOrdinal,
                                            int bits,
                                            char const* name) :
-  ordinal_(inOrdinal), bits_(bits), name_(name) {}
+    ordinal_(inOrdinal), bits_(bits), name_(name)
+{}
+
+ErrorCorrectionLevel::ErrorCorrectionLevel(const ErrorCorrectionLevel &other) :
+    ordinal_(other.ordinal()), bits_(other.bits()), name_(other.name())
+{}
 
 int ErrorCorrectionLevel::ordinal() const {
   return ordinal_;
@@ -45,6 +50,15 @@ string const& ErrorCorrectionLevel::name() const {
 
 ErrorCorrectionLevel::operator string const& () const {
   return name_;
+}
+
+ErrorCorrectionLevel& ErrorCorrectionLevel::operator=(const ErrorCorrectionLevel &other)
+{
+    ordinal_ = other.ordinal();
+    bits_ = other.bits();
+    name_ = other.name();
+
+    return *this;
 }
 
 ErrorCorrectionLevel& ErrorCorrectionLevel::forBits(int bits) {

@@ -1,5 +1,5 @@
-#ifndef __READER_H__
-#define __READER_H__
+#ifndef ZXING_READER_H
+#define ZXING_READER_H
 
 /*
  *  Reader.h
@@ -26,15 +26,15 @@
 
 namespace zxing {
 
- class Reader : public Counted {
+ class Reader  {
   protected:
    Reader() {}
   public:
-   virtual Ref<Result> decode(Ref<BinaryBitmap> image);
-   virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints) = 0;
+   virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image);
+   virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints) = 0;
    virtual ~Reader();
 };
 
 }
 
-#endif // __READER_H__
+#endif // ZXING_READER_H

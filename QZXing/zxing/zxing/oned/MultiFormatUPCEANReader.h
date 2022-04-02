@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __MULTI_FORMAT_UPC_EAN_READER_H__
-#define __MULTI_FORMAT_UPC_EAN_READER_H__
+#ifndef ZXING_MULTI_FORMAT_UPC_EAN_READER_H
+#define ZXING_MULTI_FORMAT_UPC_EAN_READER_H
 /*
  *  MultiFormatUPCEANReader.h
  *  ZXing
@@ -29,13 +29,14 @@ class UPCEANReader;
 
 class MultiFormatUPCEANReader : public OneDReader {
 private:
-    std::vector< Ref<UPCEANReader> > readers;
+    std::vector< QSharedPointer<UPCEANReader> > readers;
 public:
     MultiFormatUPCEANReader(DecodeHints hints);
-    Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+    QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
 };
 
 }
 }
 
-#endif
+#endif // ZXING_MULTI_FORMAT_UPC_EAN_READER_H
+

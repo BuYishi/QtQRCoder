@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __LUMINANCESOURCE_H__
-#define __LUMINANCESOURCE_H__
+#ifndef ZXING_LUMINANCESOURCE_H
+#define ZXING_LUMINANCESOURCE_H
 /*
  *  LuminanceSource.h
  *  zxing
@@ -20,13 +20,13 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <string.h>
+#include "common/Types.h"
 
 namespace zxing {
 
-class LuminanceSource : public Counted {
+class LuminanceSource  {
  private:
   const int width;
   const int height;
@@ -39,21 +39,23 @@ class LuminanceSource : public Counted {
   int getHeight() const { return height; }
 
   // Callers take ownership of the returned memory and must call delete [] on it themselves.
-  virtual ArrayRef<char> getRow(int y, ArrayRef<char> row) const = 0;
-  virtual ArrayRef<char> getMatrix() const = 0;
+  virtual QSharedPointer<std::vector<zxing::byte>> getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const = 0;
+  virtual QSharedPointer<std::vector<zxing::byte>> getMatrix() const = 0;
 
   virtual bool isCropSupported() const;
-  virtual Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
+  virtual QSharedPointer<LuminanceSource> crop(int left, int top, int width, int height) const;
 
   virtual bool isRotateSupported() const;
 
-  virtual Ref<LuminanceSource> invert() const;
+  virtual QSharedPointer<LuminanceSource> invert() const;
   
-  virtual Ref<LuminanceSource> rotateCounterClockwise() const;
+  virtual QSharedPointer<LuminanceSource> rotateCounterClockwise() const;
+
+  virtual QSharedPointer<LuminanceSource> rotateCounterClockwise45() const;
 
   operator std::string () const;
 };
 
 }
 
-#endif /* LUMINANCESOURCE_H_ */
+#endif // ZXING_LUMINANCESOURCE_H

@@ -29,7 +29,7 @@ using std::min;
 using std::abs;
 using zxing::pdf417::detector::LinesSampler;
 using zxing::pdf417::decoder::BitMatrixParser;
-using zxing::Ref;
+
 using zxing::BitMatrix;
 using zxing::NotFoundException;
 using zxing::Point;
@@ -66,7 +66,40 @@ class VoteResult {
     this->vote = vote;
   }
 };
-  
+
+// Moe 22.04.16 changed for the case that it's indecisive.
+// The better way is to check if one of the votes matches the "expected" length. 
+// That solves some of the problems with PDF-417 codes that I had when I tried, 
+// to decode codes from a spezific library.
+
+VoteResult getValueWithMaxVotes(map<int, int>& votes,int expectedLength) {
+  VoteResult result;
+  int maxVotes = 0;
+  int firstVote = 0, secondVote = 0;
+  for (map<int, int>::iterator i = votes.begin(); i != votes.end(); i++) {
+    if (i->second > maxVotes) {
+      maxVotes = i->second;
+      result.setVote(i->first);
+      firstVote = i->first;
+      result.setIndecisive(false);
+    } else if (i->second == maxVotes) {
+      if(expectedLength != 0)
+        secondVote = i->first;
+      result.setIndecisive(true);
+    }
+    if(expectedLength != 0) {
+      firstVote++;
+      secondVote++;
+      if(secondVote == expectedLength && result.isIndecisive())
+        result.setVote(secondVote);
+      else
+        result.setVote(firstVote);
+    }
+  }
+  return result;
+}
+
+#if 0
 VoteResult getValueWithMaxVotes(map<int, int>& votes) {
   VoteResult result;
   int maxVotes = 0;
@@ -81,7 +114,7 @@ VoteResult getValueWithMaxVotes(map<int, int>& votes) {
   }
   return result;
 }
-
+#endif
 }
 
 vector<float> LinesSampler::init_ratios_table() {
@@ -114,7 +147,7 @@ vector<float> LinesSampler::init_ratios_table() {
 
 const vector<float> LinesSampler::RATIOS_TABLE = init_ratios_table();
 
-LinesSampler::LinesSampler(Ref<BitMatrix> linesMatrix, int dimension)
+LinesSampler::LinesSampler(QSharedPointer<BitMatrix> linesMatrix, int dimension)
     : linesMatrix_(linesMatrix), dimension_(dimension) {}
 
 /**
@@ -122,7 +155,7 @@ LinesSampler::LinesSampler(Ref<BitMatrix> linesMatrix, int dimension)
  *
  * @return the potentially decodable bit matrix.
  */
-Ref<BitMatrix> LinesSampler::sample() {
+QSharedPointer<BitMatrix> LinesSampler::sample() {
   const int symbolsPerLine = dimension_ / MODULES_IN_SYMBOL;
 
   // XXX
@@ -144,7 +177,7 @@ Ref<BitMatrix> LinesSampler::sample() {
     detectedCodeWords[i].resize(votes[i].size(), 0);
     for (int j = 0; j < (int)votes[i].size(); j++) {
       if (!votes[i][j].empty()) {
-        detectedCodeWords[i][j] = getValueWithMaxVotes(votes[i][j]).getVote();
+        detectedCodeWords[i][j] = getValueWithMaxVotes(votes[i][j],0).getVote();
       }
     }
   }
@@ -157,7 +190,7 @@ Ref<BitMatrix> LinesSampler::sample() {
   detectedCodeWords.resize(rowCount);
 
   // XXX
-  Ref<BitMatrix> grid(new BitMatrix(dimension_, detectedCodeWords.size()));
+  QSharedPointer<BitMatrix> grid(new BitMatrix(dimension_, int(detectedCodeWords.size())));
   codewordsToBitMatrix(detectedCodeWords, grid);
 
   return grid;
@@ -168,11 +201,12 @@ Ref<BitMatrix> LinesSampler::sample() {
  * @param codewords
  * @param matrix
  */
-void LinesSampler::codewordsToBitMatrix(vector<vector<int> > &codewords, Ref<BitMatrix> &matrix) {
+void LinesSampler::codewordsToBitMatrix(vector<vector<int> > &codewords, QSharedPointer<BitMatrix> &matrix) {
   for (int i = 0; i < (int)codewords.size(); i++) {
     for (int j = 0; j < (int)codewords[i].size(); j++) {
       int moduleOffset = j * MODULES_IN_SYMBOL;
       for (int k = 0; k < MODULES_IN_SYMBOL; k++) {
+        //TODO: Potential unsafe sign check of a bitwise operation.
         if ((codewords[i][j] & (1 << (MODULES_IN_SYMBOL - k - 1))) > 0) {
           matrix->set(moduleOffset + k, i);
         }
@@ -193,6 +227,7 @@ int LinesSampler::calculateClusterNumber(int codeword) {
   int barNumber = 0;
   bool blackBar = true;
   int clusterNumber = 0;
+  //TODO: Potential unsafe sign check of a bitwise operation.
   for (int i = 0; i < MODULES_IN_SYMBOL; i++) {
     if ((codeword & (1 << i)) > 0) {
       if (!blackBar) {
@@ -219,7 +254,7 @@ int LinesSampler::calculateClusterNumber(int codeword) {
 //#define OUTPUT_CLUSTER_NUMBERS 1
 //#define OUTPUT_EC_LEVEL 1
 
-void LinesSampler::computeSymbolWidths(vector<float> &symbolWidths, const int symbolsPerLine, Ref<BitMatrix> linesMatrix)
+void LinesSampler::computeSymbolWidths(vector<float> &symbolWidths, const int symbolsPerLine, QSharedPointer<BitMatrix> linesMatrix)
 {
   int symbolStart = 0;
   bool lastWasSymbolStart = true;
@@ -241,7 +276,8 @@ void LinesSampler::computeSymbolWidths(vector<float> &symbolWidths, const int sy
         // Make sure we really found a symbol by asserting a minimal size of 75% of the expected symbol width.
         // This might break highly distorted barcodes, but fixes an issue with barcodes where there is a
         // full black column from top to bottom within a symbol.
-        if (currentWidth > 0.75 * symbolWidth) {
+        if (currentWidth > 0.80 * symbolWidth) {
+          // Moe 22.04.16 for the codes I've tested 80 seems to be the better value(the old value was 75).
           // The actual symbol width might be slightly bigger than the expected symbol width,
           // but if we are more than half an expected symbol width bigger, we assume that
           // we missed one or more symbols and assume that they were the expected symbol width.
@@ -285,7 +321,7 @@ void LinesSampler::computeSymbolWidths(vector<float> &symbolWidths, const int sy
 void LinesSampler::linesMatrixToCodewords(vector<vector<int> >& clusterNumbers,
                                           const int symbolsPerLine,
                                           const vector<float>& symbolWidths,
-                                          Ref<BitMatrix> linesMatrix,
+                                          QSharedPointer<BitMatrix> linesMatrix,
                                           vector<vector<int> >& codewords)
 {
   for (int y = 0; y < linesMatrix->getHeight(); y++) {
@@ -444,7 +480,7 @@ void LinesSampler::linesMatrixToCodewords(vector<vector<int> >& clusterNumbers,
 
 #if PDF417_DIAG
   {
-    Ref<BitMatrix> bits(new BitMatrix(symbolsPerLine * MODULES_IN_SYMBOL, codewords.size()));
+    QSharedPointer<BitMatrix> bits(new BitMatrix(symbolsPerLine * MODULES_IN_SYMBOL, codewords.size()));
     codewordsToBitMatrix(codewords, bits);
     static int __cnt__ = 0;
     stringstream ss;
@@ -478,7 +514,7 @@ LinesSampler::distributeVotes(const int symbolsPerLine,
 
     // Ignore lines where no codeword could be read.
     if (!clusterNumberVotes.empty()) {
-      VoteResult voteResult = getValueWithMaxVotes(clusterNumberVotes);
+      VoteResult voteResult = getValueWithMaxVotes(clusterNumberVotes,0);
       bool lineClusterNumberIsIndecisive = voteResult.isIndecisive();
       int lineClusterNumber = voteResult.getVote();
 
@@ -663,7 +699,7 @@ int LinesSampler::decodeRowCount(const int symbolsPerLine, vector<vector<int> > 
       int rowNumber = thirdCodewordDecodedRight / 30;
       rowNumberVotes[rowNumber] = rowNumberVotes[rowNumber] + 1;
     }
-    int rowNumber = getValueWithMaxVotes(rowNumberVotes).getVote();
+    int rowNumber = getValueWithMaxVotes(rowNumberVotes,0).getVote();
     if (lastRowNumber + 1 < rowNumber) {
       for (int j = lastRowNumber + 1; j < rowNumber; j++) {
         insertLinesAt.push_back(i);
@@ -678,7 +714,7 @@ int LinesSampler::decodeRowCount(const int symbolsPerLine, vector<vector<int> > 
     detectedCodeWords.insert(detectedCodeWords.begin() + insertLinesAt[i] + i, vector<int>(symbolsPerLine, 0));
   }
 
-  int rowCount = getValueWithMaxVotes(rowCountVotes).getVote();
+  int rowCount = getValueWithMaxVotes(rowCountVotes, int(detectedCodeWords.size())).getVote();
   // int ecLevel = getValueWithMaxVotes(ecLevelVotes);
 
 #if PDF417_DIAG && OUTPUT_EC_LEVEL

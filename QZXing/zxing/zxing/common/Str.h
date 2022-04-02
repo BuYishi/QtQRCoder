@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __STR_H__
-#define __STR_H__
+#ifndef ZXING_STR_H
+#define ZXING_STR_H
 
 /*
  *  Str.h
@@ -23,21 +23,21 @@
 
 #include <string>
 #include <iostream>
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 
 namespace zxing {
 
 class String;
 std::ostream& operator << (std::ostream& out, String const& s);
 
-class String : public Counted {
+class String  {
 private:
   std::string text_;
 public:
   explicit String(const std::string &text);
   explicit String(int);
   char charAt(int) const;
-  Ref<String> substring(int) const;
+  QSharedPointer<String> substring(int, int = -1) const;
   const std::string& getText() const;
   int size() const;
   void append(std::string const& tail);
@@ -48,4 +48,4 @@ public:
 
 }
 
-#endif // __COMMON__STRING_H__
+#endif // ZXING_STR_H

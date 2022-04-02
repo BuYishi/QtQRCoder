@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __CODE_128_READER_H__
-#define __CODE_128_READER_H__
+#ifndef ZXING_CODE_128_READER_H
+#define ZXING_CODE_128_READER_H
 /*
  *  Copyright 2010 ZXing authors All rights reserved.
  *
@@ -29,13 +29,13 @@ private:
   static const int MAX_AVG_VARIANCE;
   static const int MAX_INDIVIDUAL_VARIANCE;
 
-  static std::vector<int> findStartPattern(Ref<BitArray> row);
-  static int decodeCode(Ref<BitArray> row,
+  static std::vector<int> findStartPattern(QSharedPointer<BitArray> row);
+  static int decodeCode(QSharedPointer<BitArray> row,
                         std::vector<int>& counters,
                         int rowOffset);
 			
 public:
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
   Code128Reader();
   ~Code128Reader();
 
@@ -45,4 +45,5 @@ public:
 }
 }
 
-#endif
+#endif // ZXING_CODE_128_READER_H
+

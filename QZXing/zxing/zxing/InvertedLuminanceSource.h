@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __INVERTEDLUMINANCESOURCE_H__
-#define __INVERTEDLUMINANCESOURCE_H__
+#ifndef ZXING_INVERTEDLUMINANCESOURCE_H
+#define ZXING_INVERTEDLUMINANCESOURCE_H
 /*
  *  Copyright 2013 ZXing authors All rights reserved.
  *
@@ -25,24 +25,24 @@ namespace zxing {
 class InvertedLuminanceSource : public LuminanceSource {
 private:
   typedef LuminanceSource Super;
-  const Ref<LuminanceSource> delegate;
+  const QSharedPointer<LuminanceSource> delegate;
 
 public:
-  InvertedLuminanceSource(Ref<LuminanceSource> const&);
+  InvertedLuminanceSource(QSharedPointer<LuminanceSource> const&);
 
-  ArrayRef<char> getRow(int y, ArrayRef<char> row) const;
-  ArrayRef<char> getMatrix() const;
+  QSharedPointer<std::vector<zxing::byte>> getRow(int y, QSharedPointer<std::vector<zxing::byte>> row) const;
+  QSharedPointer<std::vector<zxing::byte>> getMatrix() const;
 
   boolean isCropSupported() const;
-  Ref<LuminanceSource> crop(int left, int top, int width, int height) const;
+  QSharedPointer<LuminanceSource> crop(int left, int top, int width, int height) const;
 
   boolean isRotateSupported() const;
 
-  virtual Ref<LuminanceSource> invert() const;
+  virtual QSharedPointer<LuminanceSource> invert() const;
 
-  Ref<LuminanceSource> rotateCounterClockwise() const;
+  QSharedPointer<LuminanceSource> rotateCounterClockwise() const;
 };
 
 }
 
-#endif /* INVERTEDLUMINANCESOURCE_H_ */
+#endif // ZXING_INVERTEDLUMINANCESOURCE_H

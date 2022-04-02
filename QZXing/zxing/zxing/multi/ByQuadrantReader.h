@@ -1,5 +1,5 @@
-#ifndef __BY_QUADRANT_READER_H__
-#define __BY_QUADRANT_READER_H__
+#ifndef ZXING_BY_QUADRANT_READER_H
+#define ZXING_BY_QUADRANT_READER_H
 
 /*
  *  Copyright 2011 ZXing authors All rights reserved.
@@ -32,11 +32,11 @@ class ByQuadrantReader : public Reader {
   public:
     ByQuadrantReader(Reader& delegate);
     virtual ~ByQuadrantReader();
-    virtual Ref<Result> decode(Ref<BinaryBitmap> image);
-    virtual Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
+    virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image);
+    virtual QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
 };
 
 }
 }
 
-#endif // __BY_QUADRANT_READER_H__
+#endif // ZXING_BY_QUADRANT_READER_H

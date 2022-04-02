@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __FINDER_PATTERN_H__
-#define __FINDER_PATTERN_H__
+#ifndef ZXING_FINDER_PATTERN_H
+#define ZXING_FINDER_PATTERN_H
 
 /*
  *  FinderPattern.h
@@ -40,9 +40,9 @@ namespace zxing {
 			float getEstimatedModuleSize() const;
 			void incrementCount();
 			bool aboutEquals(float moduleSize, float i, float j) const;
-			Ref<FinderPattern> combineEstimate(float i, float j, float newModuleSize) const;
+			QSharedPointer<FinderPattern> combineEstimate(float i, float j, float newModuleSize) const;
 		};
 	}
 }
 
-#endif // __FINDER_PATTERN_H__
+#endif // ZXING_FINDER_PATTERN_H

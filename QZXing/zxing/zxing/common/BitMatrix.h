@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __BIT_MATRIX_H__
-#define __BIT_MATRIX_H__
+#ifndef ZXING_BIT_MATRIX_H
+#define ZXING_BIT_MATRIX_H
 
 /*
  *  BitMatrix.h
@@ -21,14 +21,13 @@
  * limitations under the License.
  */
 
-#include <zxing/common/Counted.h>
+#include <QSharedPointer>
 #include <zxing/common/BitArray.h>
-#include <zxing/common/Array.h>
 #include <limits>
 
 namespace zxing {
 
-class BitMatrix : public Counted {
+class BitMatrix  {
 public:
   static const int bitsPerWord = std::numeric_limits<unsigned int>::digits;
 
@@ -36,18 +35,7 @@ private:
   int width;
   int height;
   int rowSize;
-  ArrayRef<int> bits;
-
-#define ZX_LOG_DIGITS(digits) \
-    ((digits == 8) ? 3 : \
-     ((digits == 16) ? 4 : \
-      ((digits == 32) ? 5 : \
-       ((digits == 64) ? 6 : \
-        ((digits == 128) ? 7 : \
-         (-1))))))
-
-  static const int logBits = ZX_LOG_DIGITS(bitsPerWord);
-  static const int bitsMask = (1 << logBits) - 1;
+  QSharedPointer<std::vector<int>> bits;
 
 public:
   BitMatrix(int dimension);
@@ -56,25 +44,29 @@ public:
   ~BitMatrix();
 
   bool get(int x, int y) const {
-    int offset = y * rowSize + (x >> logBits);
-    return ((((unsigned)bits[offset]) >> (x & bitsMask)) & 1) != 0;
+    int offset = y * rowSize + (x >> 5);
+    return ((((unsigned)(*bits)[offset]) >> (x & 0x1f)) & 1) != 0;
   }
 
   void set(int x, int y) {
-    int offset = y * rowSize + (x >> logBits);
-    bits[offset] |= 1 << (x & bitsMask);
+    int offset = y * rowSize + (x >> 5);
+    (*bits)[offset] |= 1 << (x & 0x1f);
   }
 
   void flip(int x, int y);
+  void rotate180();
+
   void clear();
   void setRegion(int left, int top, int width, int height);
-  Ref<BitArray> getRow(int y, Ref<BitArray> row);
+  QSharedPointer<BitArray> getRow(int y, QSharedPointer<BitArray> row);
+  void setRow(int y, QSharedPointer<BitArray> row);
 
   int getWidth() const;
   int getHeight() const;
 
-  ArrayRef<int> getTopLeftOnBit() const;
-  ArrayRef<int> getBottomRightOnBit() const;
+  QSharedPointer<std::vector<int>> getTopLeftOnBit() const;
+  QSharedPointer<std::vector<int>> getBottomRightOnBit() const;
+  QSharedPointer<std::vector<int>> getEnclosingRectangle() const;
 
   friend std::ostream& operator<<(std::ostream &out, const BitMatrix &bm);
   const char *description();
@@ -88,4 +80,4 @@ private:
 
 }
 
-#endif // __BIT_MATRIX_H__
+#endif // ZXING_BIT_MATRIX_H

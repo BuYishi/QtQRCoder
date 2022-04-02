@@ -1,6 +1,6 @@
 // -*- mode:c++; tab-width:2; indent-tabs-mode:nil; c-basic-offset:2 -*-
-#ifndef __CODA_BAR_READER_H__
-#define __CODA_BAR_READER_H__
+#ifndef ZXING_CODA_BAR_READER_H
+#define ZXING_CODA_BAR_READER_H
 /*
  *  Copyright 2010 ZXing authors All rights reserved.
  *
@@ -37,12 +37,12 @@ private:
 public:
   CodaBarReader();
 
-  Ref<Result> decodeRow(int rowNumber, Ref<BitArray> row);
+  QSharedPointer<Result> decodeRow(int rowNumber, QSharedPointer<BitArray> row, DecodeHints hints);
   
   void validatePattern(int start);
 
 private:
-  void setCounters(Ref<BitArray> row);
+  void setCounters(QSharedPointer<BitArray> row);
   void counterAppend(int e);
   int findStartPattern();
   
@@ -54,4 +54,4 @@ private:
 }
 }
 
-#endif
+#endif // ZXING_CODA_BAR_READER_H

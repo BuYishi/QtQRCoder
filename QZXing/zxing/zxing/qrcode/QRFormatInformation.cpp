@@ -20,6 +20,7 @@
 
 #include <zxing/qrcode/FormatInformation.h>
 #include <limits>
+#include <zxing/common/Types.h>
 
 namespace zxing {
 namespace qrcode {
@@ -39,7 +40,7 @@ int FormatInformation::N_FORMAT_INFO_DECODE_LOOKUPS = 32;
 int FormatInformation::BITS_SET_IN_HALF_BYTE[] = { 0, 1, 1, 2, 1, 2, 2, 3, 1, 2, 2, 3, 2, 3, 3, 4 };
 
 FormatInformation::FormatInformation(int formatInfo) :
-    errorCorrectionLevel_(ErrorCorrectionLevel::forBits((formatInfo >> 3) & 0x03)), dataMask_((char)(formatInfo & 0x07)) {
+    errorCorrectionLevel_(ErrorCorrectionLevel::forBits((formatInfo >> 3) & 0x03)), dataMask_((zxing::byte)(formatInfo & 0x07)) {
 }
 
 ErrorCorrectionLevel& FormatInformation::getErrorCorrectionLevel() {
@@ -58,8 +59,8 @@ int FormatInformation::numBitsDiffering(int a, int b) {
          + BITS_SET_IN_HALF_BYTE[(a >> 28 & 0x0F)];
 }
 
-Ref<FormatInformation> FormatInformation::decodeFormatInformation(int maskedFormatInfo1, int maskedFormatInfo2) {
-  Ref<FormatInformation> result(doDecodeFormatInformation(maskedFormatInfo1, maskedFormatInfo2));
+QSharedPointer<FormatInformation> FormatInformation::decodeFormatInformation(int maskedFormatInfo1, int maskedFormatInfo2) {
+  QSharedPointer<FormatInformation> result(doDecodeFormatInformation(maskedFormatInfo1, maskedFormatInfo2));
   if (result != 0) {
     return result;
   }
@@ -69,7 +70,7 @@ Ref<FormatInformation> FormatInformation::decodeFormatInformation(int maskedForm
   return doDecodeFormatInformation(maskedFormatInfo1 ^ FORMAT_INFO_MASK_QR,
                                    maskedFormatInfo2  ^ FORMAT_INFO_MASK_QR);
 }
-Ref<FormatInformation> FormatInformation::doDecodeFormatInformation(int maskedFormatInfo1, int maskedFormatInfo2) {
+QSharedPointer<FormatInformation> FormatInformation::doDecodeFormatInformation(int maskedFormatInfo1, int maskedFormatInfo2) {
   // Find the int in FORMAT_INFO_DECODE_LOOKUP with fewest bits differing
   int bestDifference = numeric_limits<int>::max();
   int bestFormatInfo = 0;
@@ -78,7 +79,7 @@ Ref<FormatInformation> FormatInformation::doDecodeFormatInformation(int maskedFo
     int targetInfo = decodeInfo[0];
     if (targetInfo == maskedFormatInfo1 || targetInfo == maskedFormatInfo2) {
       // Found an exact match
-      Ref<FormatInformation> result(new FormatInformation(decodeInfo[1]));
+      QSharedPointer<FormatInformation> result(new FormatInformation(decodeInfo[1]));
       return result;
     }
     int bitsDifference = numBitsDiffering(maskedFormatInfo1, targetInfo);
@@ -96,10 +97,10 @@ Ref<FormatInformation> FormatInformation::doDecodeFormatInformation(int maskedFo
       }
   }
   if (bestDifference <= 3) {
-    Ref<FormatInformation> result(new FormatInformation(bestFormatInfo));
+    QSharedPointer<FormatInformation> result(new FormatInformation(bestFormatInfo));
     return result;
   }
-  Ref<FormatInformation> result;
+  QSharedPointer<FormatInformation> result;
   return result;
 }
 

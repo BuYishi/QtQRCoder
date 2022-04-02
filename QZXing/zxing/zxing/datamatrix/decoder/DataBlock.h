@@ -1,5 +1,5 @@
-#ifndef __DATA_BLOCK_DM_H__
-#define __DATA_BLOCK_DM_H__
+#ifndef ZXING_DATA_BLOCK_DM_H
+#define ZXING_DATA_BLOCK_DM_H
 
 /*
  *  DataBlock.h
@@ -22,28 +22,27 @@
  */
 
 #include <vector>
-#include <zxing/common/Counted.h>
-#include <zxing/common/Array.h>
+#include <QSharedPointer>
 #include <zxing/datamatrix/Version.h>
 
 namespace zxing {
 namespace datamatrix {
 
-class DataBlock : public Counted {
+class DataBlock  {
 private:
   int numDataCodewords_;
-  ArrayRef<char> codewords_;
+  QSharedPointer<std::vector<zxing::byte>> codewords_;
 
-  DataBlock(int numDataCodewords, ArrayRef<char> codewords);
+  DataBlock(int numDataCodewords, QSharedPointer<std::vector<zxing::byte>> codewords);
 
 public:  
-  static std::vector<Ref<DataBlock> > getDataBlocks(ArrayRef<char> rawCodewords, Version *version);
+  static std::vector<QSharedPointer<DataBlock> > getDataBlocks(QSharedPointer<std::vector<zxing::byte>> rawCodewords, QSharedPointer<Version>version);
 
   int getNumDataCodewords();
-  ArrayRef<char> getCodewords();
+  QSharedPointer<std::vector<zxing::byte>> getCodewords();
 };
 
 }
 }
 
-#endif // __DATA_BLOCK_DM_H__
+#endif // ZXING_DATA_BLOCK_DM_H

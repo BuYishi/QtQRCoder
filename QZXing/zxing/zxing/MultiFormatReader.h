@@ -1,5 +1,5 @@
-#ifndef __MULTI_FORMAT_READER_H__
-#define __MULTI_FORMAT_READER_H__
+#ifndef ZXING_MULTI_FORMAT_READER_H
+#define ZXING_MULTI_FORMAT_READER_H
 
 /*
  *  MultiFormatBarcodeReader.h
@@ -29,20 +29,22 @@
 namespace zxing {
   class MultiFormatReader : public Reader {
   private:
-    Ref<Result> decodeInternal(Ref<BinaryBitmap> image);
+    QSharedPointer<Result> decodeInternal(QSharedPointer<BinaryBitmap> image);
   
-    std::vector<Ref<Reader> > readers_;
+    std::vector<QSharedPointer<Reader> > readers_;
     DecodeHints hints_;
 
   public:
     MultiFormatReader();
     
-    Ref<Result> decode(Ref<BinaryBitmap> image);
-    Ref<Result> decode(Ref<BinaryBitmap> image, DecodeHints hints);
-    Ref<Result> decodeWithState(Ref<BinaryBitmap> image);
+    QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image);
+    QSharedPointer<Result> decode(QSharedPointer<BinaryBitmap> image, DecodeHints hints);
+    QSharedPointer<Result> decodeWithState(QSharedPointer<BinaryBitmap> image);
     void setHints(DecodeHints hints);
+    void enableReaders(DecodeHints hints, bool allowAll = false);
     ~MultiFormatReader();
   };
 }
 
-#endif
+#endif // ZXING_MULTI_FORMAT_READER_H
+
